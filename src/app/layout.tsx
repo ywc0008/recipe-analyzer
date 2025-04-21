@@ -13,9 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	title: "Next.js + Neon Boilerplate",
-	description:
-		"A production-ready starter kit that combines React19, Next15, TypeScript, Tailwind CSS, Auth.js, Prisma, and Neon's serverless PostgreSQL.",
+	title: "레시피 분석기",
+	description: "레시피 분석기",
 };
 
 export default function RootLayout({
@@ -27,8 +26,8 @@ export default function RootLayout({
 		<html lang="en">
 			<head>
 				{/* Favicon */}
-				<link rel="icon" href="/favicon/favicon.ico" />
-				<link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
+				{/* <link rel="icon" href="/favicon/favicon.ico" />
+				<link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" /> */}
 			</head>
 			<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
 		</html>

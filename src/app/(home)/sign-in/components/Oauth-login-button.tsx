@@ -8,7 +8,7 @@ import { GoogleIcon, AppleIcon, KakaoIcon, NaverIcon, GithubIcon } from "@/compo
 import { signInWithOauthAction } from "../actions";
 
 interface OauthLoginButtonProps {
-	provider: "Apple" | "Google" | "Kakao" | "Naver" | "Github";
+	provider: "Google" | "Kakao";
 	isDisabled?: boolean;
 	onLoginStart?: () => void;
 }
@@ -42,10 +42,7 @@ export default function OauthLoginButton({ provider, isDisabled = false, onLogin
 				) : (
 					<>
 						{provider === "Google" && <GoogleIcon className="size-8" />}
-						{provider === "Apple" && <AppleIcon className="size-8" />}
 						{provider === "Kakao" && <KakaoIcon className="size-7" />}
-						{provider === "Naver" && <NaverIcon className="size-6" />}
-						{provider === "Github" && <GithubIcon className="size-6" />}
 					</>
 				)}
 				<span className="ml-2">{isPending ? "Signing in..." : `Continue with ${provider}`}</span>

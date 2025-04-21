@@ -23,7 +23,7 @@ export default function SignOutButton({ session }: SignOutButtonProps) {
 	return (
 		<form action={handleSignOut}>
 			<Button disabled={isPending} type="submit" variant="outline">
-				Sign Out
+				로그아웃
 			</Button>
 		</form>
 	);

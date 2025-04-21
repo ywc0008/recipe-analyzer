@@ -17,23 +17,17 @@ export default async function Header() {
 				{/* Logo */}
 				<div className=" z-10">
 					<Link href="/" className="flex items-center gap-2">
-						<AuroraText className="text-xl md:text-3xl font-bold text-green-500">Next.js+Neon</AuroraText>
+						<AuroraText className="text-xl md:text-3xl font-bold">레시피 분석기</AuroraText>
 					</Link>
 				</div>
 
 				{/* User */}
 				<div className="flex items-center gap-2 z-10">
-					{session?.user && (
-						<WordRotate className="text-xl font-bold mr-2" words={["Hello", `${session.user.name}!`]} duration={2000} />
-					)}
-					<Link target="_blank" href="https://github.com/ywc0008/next.js-neon-boilerplate">
-						<GithubIcon className="size-6" />
-					</Link>
 					{session?.user ? (
 						<SignOutButton session={session} />
 					) : (
 						<Button asChild variant="outline">
-							<Link href="/sign-in">Sign In</Link>
+							<Link href="/sign-in">로그인</Link>
 						</Button>
 					)}
 				</div>
