@@ -30,6 +30,9 @@ model accounts {
   scope             String?
   session_state     String?
   token_type        String?
+  user              users   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
 }
 
 model sessions {
@@ -37,14 +40,22 @@ model sessions {
   userId       Int
   expires      DateTime @db.Timestamptz(6)
   sessionToken String   @db.VarChar(255)
+  user         users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([sessionToken])
 }
 
 model users {
-  id            Int       @id @default(autoincrement())
-  name          String?   @db.VarChar(255)
-  email         String?   @db.VarChar(255)
-  emailVerified DateTime? @db.Timestamptz(6)
+  id            Int               @id @default(autoincrement())
+  name          String?           @db.VarChar(255)
+  email         String?           @db.VarChar(255)
+  emailVerified DateTime?         @db.Timestamptz(6)
   image         String?
+  accounts      accounts[]
+  sessions      sessions[]
+  recipes       recipes[]
+  
+  @@unique([email])
 }
 
 model verification_token {
@@ -53,4 +64,55 @@ model verification_token {
   token      String
 
   @@id([identifier, token])
+}
+
+model recipes {
+  id               Int                @id @default(autoincrement())
+  title            String             @db.VarChar(255)
+  description      String?
+  instructions     String
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  userId           Int
+  user             users              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  nutritionAnalysis nutritionAnalysis?
+  recipeIngredients recipeIngredients[]
+}
+
+model ingredients {
+  id                Int                @id @default(autoincrement())
+  name              String             @db.VarChar(255)
+  caloriesPer100g   Float?
+  proteinPer100g    Float?
+  carbsPer100g      Float?
+  fatPer100g        Float?
+  unitOfMeasurement String?            @db.VarChar(50)
+  recipeIngredients recipeIngredients[]
+  
+  @@unique([name])
+}
+
+model recipeIngredients {
+  id           Int         @id @default(autoincrement())
+  recipeId     Int
+  ingredientId Int
+  quantity     Float
+  recipe       recipes     @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  ingredient   ingredients @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+  
+  @@unique([recipeId, ingredientId])
+}
+
+model nutritionAnalysis {
+  id                Int      @id @default(autoincrement())
+  recipeId          Int      @unique
+  totalCalories     Float
+  totalProtein      Float
+  totalCarbs        Float
+  totalFat          Float
+  servings          Int      @default(1)
+  aiGeneratedAdvice String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  recipe            recipes  @relation(fields: [recipeId], references: [id], onDelete: Cascade)
 }
