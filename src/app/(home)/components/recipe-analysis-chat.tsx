@@ -37,7 +37,6 @@ export default function RecipeAnalysisChat() {
 	const [input, setInput] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 	const [analysis, setAnalysis] = useState<RecipeAnalysis | null>(null);
-	const [userRecipe, setUserRecipe] = useState<string>("");
 
 	// API 직접 호출
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -45,7 +44,6 @@ export default function RecipeAnalysisChat() {
 		if (!input.trim() || isLoading) return;
 
 		setIsLoading(true);
-		setUserRecipe(input);
 
 		try {
 			const response = await fetch("/api/chat", {
@@ -93,7 +91,7 @@ export default function RecipeAnalysisChat() {
 		: [];
 
 	return (
-		<div className="flex flex-col w-full max-w-4xl py-8 mx-auto">
+		<div className="flex flex-col w-full max-w-4xl  mx-auto">
 			<Card className="w-full mb-8">
 				<CardHeader>
 					<CardTitle>레시피 영양 분석기</CardTitle>
@@ -105,8 +103,8 @@ export default function RecipeAnalysisChat() {
 							placeholder="레시피를 입력해주세요 (예: 재료, 조리법 등을 포함한 레시피)"
 							value={input}
 							onChange={(e) => setInput(e.target.value)}
-							rows={6}
-							className="w-full p-4 resize-none"
+							rows={8}
+							className="w-full p-4 resize-none overflow-auto max-h-60"
 						/>
 						<Button type="submit" disabled={isLoading || !input.trim()} className="w-full">
 							{isLoading ? "분석 중..." : "레시피 분석하기"}
@@ -114,13 +112,6 @@ export default function RecipeAnalysisChat() {
 					</form>
 				</CardContent>
 			</Card>
-
-			{userRecipe && (
-				<div className="p-4 rounded-lg bg-blue-100 dark:bg-blue-900 ml-auto max-w-[80%] mb-4">
-					<p className="font-semibold mb-1">나의 레시피</p>
-					<div className="whitespace-pre-wrap">{userRecipe}</div>
-				</div>
-			)}
 
 			{analysis && (
 				<Card className="w-full mb-4">
