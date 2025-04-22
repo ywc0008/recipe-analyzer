@@ -17,6 +17,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
 	title: "레시피 분석기",
 	description: "레시피 분석기",
+	verification: {
+		google: "6BfRNuq58wywWG_D3MDJiHI6xxL57f0dQiDUoJqHzoU",
+	},
 };
 
 export default function RootLayout({
