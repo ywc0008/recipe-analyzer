@@ -1,15 +1,9 @@
+import type { MacroChartData } from "@/types/chart";
 import type { RecipeAnalysis } from "@/types/recipe";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-
-// 차트 데이터 타입 정의
-interface MacroChartData {
-	name: string;
-	value: number;
-	color: string;
-}
 
 export function AnalysisResult({
 	analysis,
