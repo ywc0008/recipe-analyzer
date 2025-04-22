@@ -1,14 +1,18 @@
 "use client";
 
 import { useState } from "react";
+import { AlertCircleIcon } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import ErrorMessageCard from "./error-message-card";
 
 // 분석 결과 타입 정의
-interface RecipeAnalysis {
+export interface RecipeAnalysis {
 	ingredients: {
 		name: string;
 		quantity: string;
@@ -25,6 +29,7 @@ interface RecipeAnalysis {
 	};
 	servingSuggestion: string;
 	nutritionAdvice: string;
+	error?: string;
 }
 
 // 차트 데이터 타입 정의
@@ -37,11 +42,13 @@ interface MacroChartData {
 export default function RecipeAnalysisChat() {
 	const [input, setInput] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
-	const [analysis, setAnalysis] = useState<RecipeAnalysis | null>(null);
+	const [analysis, setAnalysis] = useState<RecipeAnalysis>();
+	const [isAPIError, setIsAPIError] = useState(false);
 
 	// API 직접 호출
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
+		setIsAPIError(false);
 		if (!input.trim() || isLoading) return;
 
 		setIsLoading(true);
@@ -57,17 +64,27 @@ export default function RecipeAnalysisChat() {
 				}),
 			});
 
-			if (!response.ok) {
-				throw new Error("API 응답 오류");
-			}
-
 			const data = await response.json();
-			setAnalysis(data);
+
+			if (!response.ok || (data.response && data.response.ok === false)) {
+				setIsAPIError(true);
+				setAnalysis(data);
+			} else {
+				setAnalysis(data);
+			}
 		} catch (error) {
 			console.error("레시피 분석 오류:", error);
+			setIsAPIError(true);
+			setAnalysis(undefined);
 		} finally {
 			setIsLoading(false);
 		}
+	};
+
+	const handleRetry = () => {
+		setIsAPIError(false);
+		setAnalysis(undefined);
+		setInput("");
 	};
 
 	// 탄단지 차트 데이터 생성
@@ -92,7 +109,7 @@ export default function RecipeAnalysisChat() {
 		: [];
 
 	return (
-		<div className="flex flex-col w-full max-w-4xl  mx-auto">
+		<div className="flex flex-col w-full max-w-4xl mx-auto">
 			<Card className="w-full mb-8">
 				<CardHeader>
 					<CardTitle>레시피 영양 분석기</CardTitle>
@@ -113,6 +130,8 @@ export default function RecipeAnalysisChat() {
 					</form>
 				</CardContent>
 			</Card>
+
+			{isAPIError && <ErrorMessageCard analysis={analysis} handleRetry={handleRetry} />}
 
 			{isLoading ? <AnalysisSkeleton /> : analysis && <Analysis analysis={analysis} macroChartData={macroChartData} />}
 		</div>

@@ -1,55 +1,71 @@
-import { openai } from "@ai-sdk/openai";
-import { generateObject, streamObject } from "ai";
-import { NextResponse } from "next/server";
 import { z } from "zod";
+import { streamObject } from "ai";
+import { openai } from "@ai-sdk/openai";
+import { NextResponse } from "next/server";
+
+const RecipeAnalysisSchema = z.object({
+	ingredients: z.array(
+		z.object({
+			name: z.string(),
+			quantity: z.string(),
+			calories: z.number(),
+			protein: z.number(),
+			carbs: z.number(),
+			fat: z.number(),
+		}),
+	),
+	totalCalories: z.number(),
+	macroRatio: z.object({
+		protein: z.number(),
+		carbs: z.number(),
+		fat: z.number(),
+	}),
+	servingSuggestion: z.string(),
+	nutritionAdvice: z.string(),
+	isRecipe: z.boolean().default(true),
+	errorMessage: z.string().optional(),
+});
+
+type RecipeAnalysis = z.infer<typeof RecipeAnalysisSchema>;
 
 // Allow streaming responses up to 30 seconds
-export const maxDuration = 300;
+export const maxDuration = 30;
 
-interface RecipeAnalysis {
-	ingredients: {
-		name: string;
-		quantity: string;
-		calories?: number;
-		protein?: number;
-		carbs?: number;
-		fat?: number;
-	}[];
-	totalCalories: number;
-	macroRatio: {
-		protein: number; // 단백질 비율 (%)
-		carbs: number; // 탄수화물 비율 (%)
-		fat: number; // 지방 비율 (%)
-	};
-	servingSuggestion: string;
-	nutritionAdvice: string;
+// 레시피 검증
+async function isRecipeMessage(message: string) {
+	if (message.length < 20) {
+		return false;
+	}
+	return true;
 }
 
-export async function POST(req: Request) {
+export async function POST(req: Request): Promise<Response> {
 	const { messages } = await req.json();
 
-	const result = streamObject({
+	const isRecipe = await isRecipeMessage(messages[0].content);
+
+	// 레시피가 아닌 경우
+	if (!isRecipe)
+		return NextResponse.json({
+			error: "레시피가 아닌 거 같습니다.",
+			response: { ok: false, message: "레시피 형식이 아닙니다. 음식 레시피를 입력해주세요." },
+			status: 400,
+			isRecipe: false,
+			macroRatio: {
+				protein: 0,
+				carbs: 0,
+				fat: 0,
+			},
+			totalCalories: 0,
+			ingredients: [],
+			servingSuggestion: "",
+			nutritionAdvice: "레시피를 다시 입력해주세요.",
+		});
+
+	// 레시피인 경우
+	const result = streamObject<RecipeAnalysis>({
 		model: openai("gpt-4o"),
-		schema: z.object({
-			ingredients: z.array(
-				z.object({
-					name: z.string(),
-					quantity: z.string(),
-					calories: z.number(),
-					protein: z.number(),
-					carbs: z.number(),
-					fat: z.number(),
-				}),
-			),
-			totalCalories: z.number(),
-			macroRatio: z.object({
-				protein: z.number(),
-				carbs: z.number(),
-				fat: z.number(),
-			}),
-			servingSuggestion: z.string(),
-			nutritionAdvice: z.string(),
-		}),
+		schema: RecipeAnalysisSchema,
 		prompt: messages[0].content,
 	});
 
