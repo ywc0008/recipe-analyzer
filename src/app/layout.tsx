@@ -33,7 +33,7 @@ export default function RootLayout({
 				<link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16.png" />
 			</head>
 			<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
-			<GoogleAnalytics gaId="G-WWXEVQ52F7" />
+			{process.env.NEXT_PUBLIC_GA_ID && <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />}
 		</html>
 	);
 }
