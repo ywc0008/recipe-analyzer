@@ -7,6 +7,7 @@ import { GithubIcon } from "./social-icons";
 import SignOutButton from "./sign-out-button";
 import { AuroraText } from "../magicui/aurora-text";
 import { WordRotate } from "../magicui/word-rotate";
+import Image from "next/image";
 
 export default async function Header() {
 	const session = await auth();
@@ -15,9 +16,10 @@ export default async function Header() {
 		<header className="sticky top-0 z-50 w-full flex items-center justify-center py-4 px-6 md:px-12 border-b bg-white">
 			<div className="container flex items-center justify-between">
 				{/* Logo */}
-				<div className=" z-10">
+				<div className="z-10">
 					<Link href="/" className="flex items-center gap-2">
-						<AuroraText className="text-xl md:text-3xl font-bold">레시피 분석기</AuroraText>
+						<Image src="/logo.png" alt="logo" width={50} height={50} />
+						<h1 className="text-xl md:text-3xl font-extrabold">레시피 분석기</h1>
 					</Link>
 				</div>
 
