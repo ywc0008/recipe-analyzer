@@ -33,7 +33,7 @@ export default function ErrorMessageCard({ analysis, handleRetry }: ErrorMessage
 				</div>
 				<Button
 					variant="outline"
-					className="w-full border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground"
+					className="w-full border-destructive text-destructive hover:bg-destructive hover:text-white"
 					onClick={handleRetry}
 				>
 					다시 시도하기
