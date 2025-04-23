@@ -66,6 +66,11 @@ export async function POST(req: Request): Promise<Response> {
 	const result = streamObject<RecipeAnalysis>({
 		model: openai("gpt-4o"),
 		schema: RecipeAnalysisSchema,
+		system:
+			"You are a helpful assistant that analyzes recipes and provides nutritional information." +
+			"your response should be in korean." +
+			"너가 탄수화물, 단백질, 지방의 칼로리 비율을 계산할 때 합계가 100%가 되도록 계산해야 한다." +
+			"퍼센트는 소수점 첫째자리까지 계산해야 한다.",
 		prompt: messages[0].content,
 	});
 

@@ -5,10 +5,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-export function AnalysisResult({
-	analysis,
-	macroChartData,
-}: { analysis: RecipeAnalysis; macroChartData: MacroChartData[] }) {
+type AnalysisResultProps = {
+	analysis: RecipeAnalysis;
+	macroChartData: MacroChartData[];
+};
+
+export function AnalysisResult({ analysis, macroChartData }: AnalysisResultProps) {
 	return (
 		<Card className="w-full mb-4">
 			<CardHeader>
@@ -56,7 +58,7 @@ export function AnalysisResult({
 										fill="#8884d8"
 										dataKey="value"
 										label={({ name, percent }: { name: string; percent: number }) =>
-											`${name} ${(percent * 100).toFixed(0)}%`
+											`${name} ${(percent * 100).toFixed(1)}%`
 										}
 									>
 										{macroChartData.map((entry) => (
