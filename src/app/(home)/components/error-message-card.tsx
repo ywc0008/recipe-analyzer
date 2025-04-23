@@ -1,9 +1,13 @@
+"use client";
+
 import type { RecipeAnalysis } from "@/types/recipe";
 
+import { useEffect, useState } from "react";
 import { AlertCircleIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 type ErrorMessageCardProps = {
 	analysis?: RecipeAnalysis;
@@ -11,6 +15,33 @@ type ErrorMessageCardProps = {
 };
 
 export default function ErrorMessageCard({ analysis, handleRetry }: ErrorMessageCardProps) {
+	const [shortcut, setShortcut] = useState("");
+
+	useEffect(() => {
+		const platform = navigator.platform.toLowerCase();
+		const isMac = platform.includes("mac");
+		if (isMac) {
+			setShortcut("⌘ + R");
+		} else {
+			setShortcut("Ctrl + R");
+		}
+
+		const handleKeyDown = (event: KeyboardEvent) => {
+			const isMac = platform.includes("mac");
+			if ((isMac ? event.metaKey : event.ctrlKey) && event.key === "r") {
+				event.preventDefault();
+				event.stopPropagation();
+				handleRetry();
+			}
+		};
+
+		window.addEventListener("keydown", handleKeyDown);
+
+		return () => {
+			window.removeEventListener("keydown", handleKeyDown);
+		};
+	}, [handleRetry]);
+
 	return (
 		<Card className="w-full mb-8 border-2 border-destructive bg-destructive/5">
 			<CardContent className="pt-6 pb-4 space-y-4">
@@ -31,13 +62,22 @@ export default function ErrorMessageCard({ analysis, handleRetry }: ErrorMessage
 						<li>충분한 길이의 텍스트를 입력해주세요</li>
 					</ul>
 				</div>
-				<Button
-					variant="outline"
-					className="w-full border-destructive text-destructive hover:bg-destructive hover:text-white"
-					onClick={handleRetry}
-				>
-					다시 시도하기
-				</Button>
+				<TooltipProvider delayDuration={300}>
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<Button
+								variant="outline"
+								className="w-full border-destructive text-destructive hover:bg-destructive hover:text-white"
+								onClick={handleRetry}
+							>
+								다시 시도하기
+							</Button>
+						</TooltipTrigger>
+						<TooltipContent side="bottom" align="end">
+							<p>{shortcut}</p>
+						</TooltipContent>
+					</Tooltip>
+				</TooltipProvider>
 			</CardContent>
 		</Card>
 	);
