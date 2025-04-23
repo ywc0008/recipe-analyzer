@@ -4,6 +4,7 @@ import type { RecipeAnalysis } from "@/types/recipe";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 type AnalysisResultProps = {
 	analysis: RecipeAnalysis;
@@ -76,30 +77,30 @@ export function AnalysisResult({ analysis, macroChartData }: AnalysisResultProps
 				<div className="mt-6">
 					<h3 className="text-lg font-semibold mb-2">재료 영양 분석</h3>
 					<div className="overflow-x-auto">
-						<table className="w-full min-w-full table-auto border-collapse">
-							<thead>
-								<tr className="bg-accent/10">
-									<th className="p-2 text-left">재료</th>
-									<th className="p-2 text-left">양</th>
-									<th className="p-2 text-left">칼로리</th>
-									<th className="p-2 text-left">단백질</th>
-									<th className="p-2 text-left">탄수화물</th>
-									<th className="p-2 text-left">지방</th>
-								</tr>
-							</thead>
-							<tbody>
+						<Table className="w-full min-w-full">
+							<TableHeader>
+								<TableRow className="bg-accent/10">
+									<TableHead className="p-2 text-center">재료</TableHead>
+									<TableHead className="p-2 text-center">양</TableHead>
+									<TableHead className="p-2 text-center">칼로리</TableHead>
+									<TableHead className="p-2 text-center">단백질</TableHead>
+									<TableHead className="p-2 text-center">탄수화물</TableHead>
+									<TableHead className="p-2 text-center">지방</TableHead>
+								</TableRow>
+							</TableHeader>
+							<TableBody>
 								{analysis.ingredients.map((ingredient) => (
-									<tr key={`ingredient-${ingredient.name}`} className="border-b border-accent/20">
-										<td className="p-2">{ingredient.name}</td>
-										<td className="p-2">{ingredient.quantity}</td>
-										<td className="p-2">{ingredient.calories} kcal</td>
-										<td className="p-2">{ingredient.protein} g</td>
-										<td className="p-2">{ingredient.carbs} g</td>
-										<td className="p-2">{ingredient.fat} g</td>
-									</tr>
+									<TableRow key={`ingredient-${ingredient.name}`} className="border-b border-accent/20">
+										<TableCell className="p-2">{ingredient.name}</TableCell>
+										<TableCell className="p-2">{ingredient.quantity}</TableCell>
+										<TableCell className="p-2">{ingredient.calories} kcal</TableCell>
+										<TableCell className="p-2">{ingredient.protein} g</TableCell>
+										<TableCell className="p-2">{ingredient.carbs} g</TableCell>
+										<TableCell className="p-2">{ingredient.fat} g</TableCell>
+									</TableRow>
 								))}
-							</tbody>
-						</table>
+							</TableBody>
+						</Table>
 					</div>
 				</div>
 			</CardContent>
