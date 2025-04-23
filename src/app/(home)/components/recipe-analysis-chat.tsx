@@ -3,11 +3,12 @@
 import type { MacroChartData } from "@/types/chart";
 import type { RecipeAnalysis } from "@/types/recipe";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 import ErrorMessageCard from "./error-message-card";
 import { AnalysisResult, AnalysisResultSkeleton } from "./analysis-result";
@@ -17,11 +18,39 @@ export default function RecipeAnalysisChat() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [analysis, setAnalysis] = useState<RecipeAnalysis>();
 	const [isAPIError, setIsAPIError] = useState(false);
+	const [shortcut, setShortcut] = useState("");
 
-	// API 직접 호출
-	const handleSubmit = async (e: React.FormEvent) => {
-		e.preventDefault();
-		setIsAPIError(false);
+	useEffect(() => {
+		const platform = navigator.platform.toLowerCase();
+		const isMac = platform.includes("mac");
+		if (isMac) {
+			setShortcut("⌘ + Enter");
+		} else {
+			setShortcut("Ctrl + Enter");
+		}
+
+		const handleKeyDown = (event: KeyboardEvent) => {
+			const isMac = platform.includes("mac");
+			if ((isMac ? event.metaKey : event.ctrlKey) && event.key === "Enter") {
+				event.preventDefault();
+				event.stopPropagation();
+
+				if (input.trim() && !isLoading) {
+					setIsAPIError(false);
+					callChatAPI();
+				}
+			}
+		};
+
+		window.addEventListener("keydown", handleKeyDown);
+
+		return () => {
+			window.removeEventListener("keydown", handleKeyDown);
+		};
+	}, [input, isLoading]);
+
+	// API 호출 함수
+	const callChatAPI = async () => {
 		if (!input.trim() || isLoading) return;
 
 		setIsLoading(true);
@@ -52,6 +81,13 @@ export default function RecipeAnalysisChat() {
 		} finally {
 			setIsLoading(false);
 		}
+	};
+
+	// API 직접 호출
+	const handleSubmit = async (e: React.FormEvent) => {
+		e.preventDefault();
+		setIsAPIError(false);
+		callChatAPI();
 	};
 
 	const handleRetry = () => {
@@ -97,9 +133,18 @@ export default function RecipeAnalysisChat() {
 							rows={8}
 							className="w-full p-4 resize-none overflow-auto max-h-60"
 						/>
-						<Button type="submit" disabled={isLoading || !input.trim()} className="w-full">
-							{isLoading ? "분석 중..." : "레시피 분석하기"}
-						</Button>
+						<TooltipProvider delayDuration={300}>
+							<Tooltip>
+								<TooltipTrigger asChild>
+									<Button type="submit" disabled={isLoading || !input.trim()} className="w-full">
+										{isLoading ? "분석 중..." : "레시피 분석하기"}
+									</Button>
+								</TooltipTrigger>
+								<TooltipContent side="bottom" align="end">
+									<p>{shortcut}</p>
+								</TooltipContent>
+							</Tooltip>
+						</TooltipProvider>
 					</form>
 				</CardContent>
 			</Card>
