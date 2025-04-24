@@ -1,3 +1,4 @@
+import type { Session } from "@/types/session";
 import type { MacroChartData } from "@/types/chart";
 import type { RecipeAnalysis } from "@/types/recipe";
 
@@ -5,16 +6,19 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import SaveButton from "./save-button";
 
 type AnalysisResultProps = {
+	session: Session;
 	analysis: RecipeAnalysis;
 	macroChartData: MacroChartData[];
 };
 
-export function AnalysisResult({ analysis, macroChartData }: AnalysisResultProps) {
+export function AnalysisResult({ session, analysis, macroChartData }: AnalysisResultProps) {
 	return (
 		<Card className="w-full mb-4">
 			<CardHeader>
+				<SaveButton session={session} />
 				<CardTitle>분석 결과</CardTitle>
 				<CardDescription>{analysis.servingSuggestion}</CardDescription>
 			</CardHeader>

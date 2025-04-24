@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 
 import OauthLoginButtons from "./components/Oauth-login-buttons";
 
-export default function SignInPage() {
+export default async function SignInPage() {
 	return (
 		<div className="flex min-h-[calc(100vh-70px)] items-center justify-center bg-background p-4">
 			<Card className="w-full max-w-md">

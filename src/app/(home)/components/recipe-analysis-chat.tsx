@@ -1,5 +1,6 @@
 "use client";
 
+import type { Session } from "@/types/session";
 import type { MacroChartData } from "@/types/chart";
 import type { RecipeAnalysis } from "@/types/recipe";
 
@@ -13,7 +14,11 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import ErrorMessageCard from "./error-message-card";
 import { AnalysisResult, AnalysisResultSkeleton } from "./analysis-result";
 
-export default function RecipeAnalysisChat() {
+type RecipeAnalysisChatProps = {
+	session: Session;
+};
+
+export default function RecipeAnalysisChat({ session }: RecipeAnalysisChatProps) {
 	const [input, setInput] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 	const [analysis, setAnalysis] = useState<RecipeAnalysis>();
@@ -154,7 +159,7 @@ export default function RecipeAnalysisChat() {
 			{isLoading ? (
 				<AnalysisResultSkeleton />
 			) : (
-				analysis && <AnalysisResult analysis={analysis} macroChartData={macroChartData} />
+				analysis && <AnalysisResult session={session} analysis={analysis} macroChartData={macroChartData} />
 			)}
 		</div>
 	);
