@@ -1,0 +1,6 @@
+-- AlterTable
+ALTER TABLE "nutritionAnalysis" ADD COLUMN     "carbsRatio" DOUBLE PRECISION NOT NULL DEFAULT 0,
+ADD COLUMN     "fatRatio" DOUBLE PRECISION NOT NULL DEFAULT 0,
+ADD COLUMN     "nutritionAdvice" TEXT,
+ADD COLUMN     "proteinRatio" DOUBLE PRECISION NOT NULL DEFAULT 0,
+ADD COLUMN     "servingSuggestion" TEXT;

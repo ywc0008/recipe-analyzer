@@ -110,7 +110,12 @@ model nutritionAnalysis {
   totalProtein      Float
   totalCarbs        Float
   totalFat          Float
+  proteinRatio      Float    @default(0)
+  carbsRatio        Float    @default(0)
+  fatRatio          Float    @default(0)
   servings          Int      @default(1)
+  servingSuggestion String?
+  nutritionAdvice   String?
   aiGeneratedAdvice String?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt

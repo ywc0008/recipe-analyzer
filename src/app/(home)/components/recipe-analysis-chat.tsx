@@ -159,7 +159,9 @@ export default function RecipeAnalysisChat({ session }: RecipeAnalysisChatProps)
 			{isLoading ? (
 				<AnalysisResultSkeleton />
 			) : (
-				analysis && <AnalysisResult session={session} analysis={analysis} macroChartData={macroChartData} />
+				analysis && (
+					<AnalysisResult session={session} analysis={analysis} macroChartData={macroChartData} recipeInput={input} />
+				)
 			)}
 		</div>
 	);

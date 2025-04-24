@@ -12,13 +12,14 @@ type AnalysisResultProps = {
 	session: Session;
 	analysis: RecipeAnalysis;
 	macroChartData: MacroChartData[];
+	recipeInput?: string;
 };
 
-export function AnalysisResult({ session, analysis, macroChartData }: AnalysisResultProps) {
+export function AnalysisResult({ session, analysis, macroChartData, recipeInput }: AnalysisResultProps) {
 	return (
 		<Card className="w-full mb-4">
 			<CardHeader>
-				<SaveButton session={session} />
+				<SaveButton session={session} analysis={analysis} recipeInput={recipeInput} />
 				<CardTitle>분석 결과</CardTitle>
 				<CardDescription>{analysis.servingSuggestion}</CardDescription>
 			</CardHeader>
