@@ -35,8 +35,6 @@ export default function SaveButton({ session, analysis, recipeInput }: SaveButto
 	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState("");
 
-	console.log(session);
-
 	const handleSave = () => {
 		if (!analysis) {
 			toast.error("분석 데이터가 없습니다.");
