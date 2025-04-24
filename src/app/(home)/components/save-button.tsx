@@ -60,7 +60,7 @@ export default function SaveButton({ session }: SaveButtonProps) {
 					</>
 				) : (
 					<>
-						<DialogHeader>
+						<DialogHeader className="flex flex-col items-center">
 							<DialogTitle>로그인</DialogTitle>
 							<DialogDescription>로그인 후 이용해주세요.</DialogDescription>
 						</DialogHeader>

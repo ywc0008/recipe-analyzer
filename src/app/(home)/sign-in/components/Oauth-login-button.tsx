@@ -45,7 +45,7 @@ export default function OauthLoginButton({ provider, isDisabled = false, onLogin
 						{provider === "Kakao" && <KakaoIcon className="size-7" />}
 					</>
 				)}
-				<span className="ml-2">{isPending ? "Signing in..." : `Continue with ${provider}`}</span>
+				<span className="ml-2">{isPending ? "로그인 중..." : `${provider}로 로그인하기`}</span>
 			</Button>
 		</form>
 	);
