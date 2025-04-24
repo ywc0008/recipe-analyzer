@@ -3,9 +3,10 @@ import type { MacroChartData } from "@/types/chart";
 import type { RecipeAnalysis } from "@/types/recipe";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import CircleChart from "@/components/common/circle-chart";
+
 import SaveButton from "./save-button";
 
 type AnalysisResultProps = {
@@ -19,7 +20,7 @@ export function AnalysisResult({ session, analysis, macroChartData, recipeInput 
 	return (
 		<Card className="w-full mb-4">
 			<CardHeader>
-				<SaveButton session={session} analysis={analysis} recipeInput={recipeInput} />
+				{recipeInput && <SaveButton session={session} analysis={analysis} recipeInput={recipeInput} />}
 				<CardTitle>분석 결과</CardTitle>
 				<CardDescription>{analysis.servingSuggestion}</CardDescription>
 			</CardHeader>
@@ -53,28 +54,7 @@ export function AnalysisResult({ session, analysis, macroChartData, recipeInput 
 					<div>
 						<h3 className="text-lg font-semibold mb-4">영양소 비율</h3>
 						<div className="h-64">
-							<ResponsiveContainer width="100%" height="100%">
-								<PieChart>
-									<Pie
-										data={macroChartData}
-										cx="50%"
-										cy="50%"
-										labelLine={false}
-										outerRadius={80}
-										fill="#8884d8"
-										dataKey="value"
-										label={({ name, percent }: { name: string; percent: number }) =>
-											`${name} ${(percent * 100).toFixed(1)}%`
-										}
-									>
-										{macroChartData.map((entry) => (
-											<Cell key={`cell-${entry.name}`} fill={entry.color} />
-										))}
-									</Pie>
-									<Tooltip />
-									<Legend />
-								</PieChart>
-							</ResponsiveContainer>
+							<CircleChart macroChartData={macroChartData} />
 						</div>
 					</div>
 				</div>
@@ -96,12 +76,12 @@ export function AnalysisResult({ session, analysis, macroChartData, recipeInput 
 							<TableBody>
 								{analysis.ingredients.map((ingredient) => (
 									<TableRow key={`ingredient-${ingredient.name}`} className="border-b border-accent/20">
-										<TableCell className="p-2">{ingredient.name}</TableCell>
-										<TableCell className="p-2">{ingredient.quantity}</TableCell>
-										<TableCell className="p-2">{ingredient.calories} kcal</TableCell>
-										<TableCell className="p-2">{ingredient.protein} g</TableCell>
-										<TableCell className="p-2">{ingredient.carbs} g</TableCell>
-										<TableCell className="p-2">{ingredient.fat} g</TableCell>
+										<TableCell className="p-2 text-center">{ingredient.name}</TableCell>
+										<TableCell className="p-2 text-center">{ingredient.quantity}</TableCell>
+										<TableCell className="p-2 text-center">{ingredient.calories} kcal</TableCell>
+										<TableCell className="p-2 text-center">{ingredient.protein} g</TableCell>
+										<TableCell className="p-2 text-center">{ingredient.carbs} g</TableCell>
+										<TableCell className="p-2 text-center">{ingredient.fat} g</TableCell>
 									</TableRow>
 								))}
 							</TableBody>
