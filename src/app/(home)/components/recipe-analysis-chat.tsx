@@ -132,7 +132,7 @@ export default function RecipeAnalysisChat({ session }: RecipeAnalysisChatProps)
 				<CardContent>
 					<form onSubmit={handleSubmit} className="space-y-4">
 						<Textarea
-							placeholder="레시피를 입력해주세요 (예: 재료, 조리법 등을 포함한 레시피)"
+							placeholder="예시: 김치찌개 (재료: 김치 300g, 돼지고기 200g, 두부 1모, 대파 1대, 고춧가루 1큰술, 간장 1큰술, 설탕 1작은술, 물 2컵 / 조리법: 1. 김치를 적당한 크기로 썰어주세요. 2. 냄비에 김치와 돼지고기를 넣고 볶아주세요. 3. 물을 부어 끓인 후 두부와 대파를 넣어주세요. 4. 간장, 고춧가루, 설탕으로 간을 맞춰주세요.)"
 							value={input}
 							onChange={(e) => setInput(e.target.value)}
 							rows={8}
